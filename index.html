@@ -234,7 +234,12 @@
             <textarea id="mensaje" class="field-textarea" name="mensaje" rows="2" placeholder="Cuéntanos de qué trata"></textarea>
             <small class="field-error" aria-live="polite"></small>
           </div>
+          <div class="honeypot" aria-hidden="true">
+            <label for="sitio-web">Deja este campo vacío</label>
+            <input id="sitio-web" name="sitio-web" type="text" tabindex="-1" autocomplete="off">
+          </div>
           <button class="submit-button" type="submit">Enviar mensaje</button>
+          <p id="form-status" class="form-status" role="status" hidden></p>
         </form>
       </div>
     </section>

@@ -53,6 +53,7 @@ function getContactField<T extends HTMLInputElement | HTMLTextAreaElement>(
 }
 
 const form = getRequiredElement(document, '#contact-form', HTMLFormElement);
+const formStatus = getRequiredElement(form, '#form-status', HTMLParagraphElement);
 const fields: Record<FieldName, ContactField> = {
   nombre: getContactField('#nombre', HTMLInputElement),
   correo: getContactField('#correo', HTMLInputElement),
@@ -69,6 +70,12 @@ function setFieldError(fieldName: FieldName, message: string): void {
   const { input, error } = fields[fieldName];
   input.setAttribute('aria-invalid', message ? 'true' : 'false');
   error.textContent = message;
+}
+
+function setStatus(message: string, status: 'ok' | 'error'): void {
+  formStatus.textContent = message;
+  formStatus.dataset.status = status;
+  formStatus.hidden = false;
 }
 
 /**
@@ -118,13 +125,23 @@ function validateForm(): boolean {
 
 form.addEventListener('submit', (event: SubmitEvent) => {
   event.preventDefault();
+  const honeypot = getRequiredElement(form, '#sitio-web', HTMLInputElement);
 
-  if (!validateForm()) {
+  if (honeypot.value.trim()) {
+    setStatus(
+      '¡Gracias! Tu mensaje ha sido enviado. Nos pondremos en contacto contigo pronto.',
+      'ok'
+    );
     return;
   }
 
-  form.reset();
-  fieldNames.forEach((fieldName) =>
-    setFieldError(fieldName, '')
+  if (!validateForm()) {
+    setStatus('Revisa los campos marcados e inténtalo de nuevo.', 'error');
+    return;
+  }
+
+  setStatus(
+    'El formulario se validó correctamente, pero el envío de mensajes aún no está habilitado.',
+    'ok'
   );
 });
