@@ -1,5 +1,11 @@
+import { config } from './config.ts';
+
 const fieldNames = ['nombre', 'correo', 'mensaje'] as const;
 type FieldName = (typeof fieldNames)[number];
+
+type Web3FormsSuccessResponse = {
+  success: true;
+};
 
 type ContactField = {
   input: HTMLInputElement | HTMLTextAreaElement;
@@ -79,6 +85,21 @@ function setStatus(message: string, status: 'ok' | 'error'): void {
 }
 
 /**
+ * Checks whether a Web3Forms response indicates a successful submission.
+ *
+ * @param value - Parsed response data returned by Web3Forms.
+ * @returns True when the response has a success value of true.
+ */
+function isWeb3FormsSuccessResponse(value: unknown): value is Web3FormsSuccessResponse {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'success' in value &&
+    value.success === true
+  );
+}
+
+/**
  * Checks whether an email address matches the expected email format.
  *
  * @param email - Email address entered by the user.
@@ -123,6 +144,47 @@ function validateForm(): boolean {
   return isValid;
 }
 
+/**
+ * Sends the validated contact form to Web3Forms and updates the form status.
+ */
+async function sendContactForm(): Promise<void> {
+  const submitButton = getRequiredElement(form, '.submit-button', HTMLButtonElement);
+  submitButton.disabled = true;
+
+  try {
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        access_key: config.web3formsKey,
+        name: fields.nombre.input.value.trim(),
+        email: fields.correo.input.value.trim(),
+        message: fields.mensaje.input.value.trim(),
+        subject: 'Nuevo mensaje de contacto - Catrina Films'
+      })
+    });
+    const result: unknown = await response.json();
+
+    if (!response.ok || !isWeb3FormsSuccessResponse(result)) {
+      console.error(`Web3Forms request failed with status ${response.status}.`);
+      setStatus('No se pudo enviar tu mensaje. Inténtalo de nuevo más tarde.', 'error');
+      return;
+    }
+
+    form.reset();
+    fieldNames.forEach((fieldName) => setFieldError(fieldName, ''));
+    setStatus('¡Gracias! Tu mensaje ha sido enviado. Nos pondremos en contacto contigo pronto.', 'ok');
+  } catch (error) {
+    console.error('Unable to send contact form with Web3Forms.', error);
+    setStatus('No se pudo enviar tu mensaje. Inténtalo de nuevo más tarde.', 'error');
+  } finally {
+    submitButton.disabled = false;
+  }
+}
+
 form.addEventListener('submit', (event: SubmitEvent) => {
   event.preventDefault();
   const honeypot = getRequiredElement(form, '#sitio-web', HTMLInputElement);
@@ -140,8 +202,5 @@ form.addEventListener('submit', (event: SubmitEvent) => {
     return;
   }
 
-  setStatus(
-    'El formulario se validó correctamente, pero el envío de mensajes aún no está habilitado.',
-    'ok'
-  );
+  void sendContactForm();
 });
