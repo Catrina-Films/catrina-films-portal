@@ -12,6 +12,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600;800&display=swap" rel="stylesheet" />
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="theme-color" content="#C34646" />
+
+<!-- Open Graph (WhatsApp, LinkedIn, Facebook) -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_MX" />
+<meta property="og:site_name" content="Catrina Films" />
+<meta property="og:title" content="Catrina Films | Cine independiente mexicano" />
+<meta property="og:description" content="Desarrollamos, producimos y acompañamos historias con voz propia, hechas desde México para el público del mundo." />
+<meta property="og:url" content="https://catrina-films.catrinafilms-ti.workers.dev/" />
+<meta property="og:image" content="https://catrina-films.catrinafilms-ti.workers.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Logo de Catrina Films sobre fondo rojo" />
+
+<!-- LinkedIn y otras lo leen de og:*; esto mejora X/Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+
 </head>
 
 <body>
@@ -91,77 +113,22 @@
           <h2 class="section-title">PELÍCULAS<span> / CATÁLOGO</span></h2>
           <a class="nav-link catalog-link" href="#contacto">Solicitar el catálogo completo</a>
         </div>
-        <div class="catalog-grid">
-
-          <article class="film-card">
-            <div class="film-poster film-poster--red">
-              <img
-                class="film-poster__image"
-                src="/src/assets/posters/el-origen-del-lenguaje-600.webp"
-                srcset="/src/assets/posters/el-origen-del-lenguaje-600.webp 600w, /src/assets/posters/el-origen-del-lenguaje-1200.webp 1200w"
-                sizes="(min-width: 1024px) 300px, 90vw"
-                width="600"
-                height="900"
-                alt="Póster de El Origen del Lenguaje"
-                loading="lazy"
-              >
-              <div class="film-poster__fallback">
-                <span class="film-title">EL ORIGEN DEL LENGUAJE</span>
-              </div>
-            </div>
-            <div class="film-meta">
-              <span class="film-name">El Origen del Lenguaje</span>
-              <span class="film-detail">2025 · [Género] · Dir. Ehiezem Alvarado</span>
-            </div>
-          </article>
-
-          <article class="film-card">
-            <div class="film-poster film-poster--light">
-              <img
-                class="film-poster__image"
-                src="/src/assets/posters/el-rey-brujo-600.webp"
-                srcset="/src/assets/posters/el-rey-brujo-600.webp 600w, /src/assets/posters/el-rey-brujo-1200.webp 1200w"
-                sizes="(min-width: 1024px) 300px, 90vw"
-                width="600"
-                height="900"
-                alt="Póster de El rey brujo"
-                loading="lazy"
-              >
-              <div class="film-poster__fallback">
-                <span class="film-title">El rey brujo</span>
-              </div>
-            </div>
-            <div class="film-meta">
-              <span class="film-name">El rey brujo</span>
-              <span class="film-detail">2026 · [Género] · Dir. Ehiezem Alvarado</span>
-            </div>
-          </article>
-
-          <article class="film-card">
-            <div class="film-poster film-poster--deep">
-              <img
-                class="film-poster__image"
-                src="/src/assets/posters/se-esta-haciendo-tarde-600.webp"
-                srcset="/src/assets/posters/se-esta-haciendo-tarde-600.webp 600w, /src/assets/posters/se-esta-haciendo-tarde-1200.webp 1200w"
-                sizes="(min-width: 1024px) 300px, 90vw"
-                width="600"
-                height="900"
-                alt="Póster de Se está haciendo tarde"
-                loading="lazy"
-              >
-              <div class="film-poster__fallback">
-                <span class="film-title">Se está haciendo tarde</span>
-              </div>
-            </div>
-            <div class="film-meta">
-              <span class="film-name">Se está haciendo tarde</span>
-              <span class="film-detail">2026 · [Género] · Dir. Ehiezem Alvarado</span>
-            </div>
-          </article>
-
-        </div>
+        <div id="catalog-grid" class="catalog-grid"></div>
       </div>
     </section>
+
+    <dialog id="trailer-dialog" aria-label="Reproductor de tráiler">
+      <div class="player">
+        <button class="trailer-dialog__close" type="button" aria-label="Cerrar tráiler">×</button>
+        <iframe
+          id="trailer-frame"
+          title="Tráiler de la película"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </dialog>
 
 
     <!-- ====== Servicios ====== -->
